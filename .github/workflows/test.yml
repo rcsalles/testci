@@ -3,7 +3,17 @@
 
 name: Test Github Action CI
 
+<<<<<<< Updated upstream:.github/workflows/test.yml
 on: [push, pull_request]
+=======
+on:
+  pull_request:
+    branches:
+      - '*'
+  push:
+    branches:
+      - master
+>>>>>>> Stashed changes:.github/workflows/test_and_code_convention.yml
 
 jobs:
   test:
