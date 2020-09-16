@@ -8,4 +8,4 @@ def test_sum_with_two_positives():
     # when
     result = service.sum(x, y)
     # then
-    assert result == x + y
+    assert result != x + y
