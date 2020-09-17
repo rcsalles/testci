@@ -1,4 +1,4 @@
-name: test-and-code-convention
+name: Test and Code Convention
 
 on:
   pull_request:

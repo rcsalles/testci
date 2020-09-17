@@ -16,7 +16,7 @@ VENV_NAME := $(PROJECT_NAME)-$(PYTHON_VERSION)
 
 
 .DEFAULT: help
-.PHONY: default_target help test clean setup create-venv setup-dev setup-os code-convention test run all
+.PHONY: default_target help test clean setup create-venv setup-dev setup-os code-convention test run all setup-pre-push-hook
 
 help: ## list all commands
 	@echo "Usage: make <command> \n"
@@ -39,7 +39,7 @@ deps-dev: .pip  ## install all requirements prod.txt + dev.txt
 deps-prod: .pip ## install requirements for production
 	$(PIP) requirements/prod.txt
 
-setup-dev: .create-venv deps-dev  ## create virtual environments and install requirements prod.txt + dev.txt
+setup-dev: .create-venv deps-dev setup-pre-push-hook ## create virtual environments and install requirements prod.txt + dev.txt
 
 all: setup-dev default_target  ## run setup-dev + tests + code-covention
 
@@ -81,3 +81,12 @@ deploy-staging: clean ## deploy to staging
 
 deploy-production: clean ## deploy to production
 	zappa update production
+
+
+setup-pre-push-hook: setup-pre-push-hook-file
+	grep -q 'make test-and-convention' .git/hooks/pre-push || \
+		printf '\n%s\n\n' 'make test-and-convention' >> .git/hooks/pre-push
+
+setup-pre-push-hook-file:
+	test -f .git/hooks/pre-push || echo '#!/bin/sh' >.git/hooks/pre-push
+	test -x .git/hooks/pre-push || chmod +x .git/hooks/pre-push
